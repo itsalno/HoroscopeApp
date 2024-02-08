@@ -1,0 +1,2 @@
+public class SSController {
+}
