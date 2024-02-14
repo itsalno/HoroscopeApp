@@ -4,6 +4,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 
 public class MainController {
+    @FXML
     public Label quoteslbl;
     @FXML
     private ImageView signimage;
