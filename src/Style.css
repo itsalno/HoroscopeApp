@@ -1,3 +1,7 @@
-.label{
-    -fx-font-family: 'Mystery Quest', cursive;
+
+.anchorpane{
+    -fx-background-color: #a28089;
+}
+.button:hover{
+    -fx-border-color: grey;
 }

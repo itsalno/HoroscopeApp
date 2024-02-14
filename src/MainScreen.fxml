@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="320.0" prefWidth="452.0" styleClass="anchorpane" stylesheets="@Style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MainController">
+   <children>
+      <Label fx:id="tdaytmrwlabel" layoutX="174.0" layoutY="14.0" text="Horoscope for today!" textFill="WHITE">
+         <font>
+            <Font name="Luminari" size="24.0" />
+         </font>
+      </Label>
+      <TextArea layoutX="151.0" layoutY="84.0" prefHeight="200.0" prefWidth="278.0" style="-fx-background-color: white;" />
+      <Button layoutX="47.0" layoutY="107.0" mnemonicParsing="false" onAction="#todayChange" style="-fx-background-color: white;" stylesheets="@Style.css" text="Today" />
+      <Button layoutX="36.0" layoutY="160.0" mnemonicParsing="false" onAction="#tmrwChange" style="-fx-background-color: white;" text="Tomorrow" />
+      <Button layoutX="30.0" layoutY="218.0" mnemonicParsing="false" onAction="#changeSign" style="-fx-background-color: white;" text="Change sign" />
+      <Label fx:id="quoteslbl" layoutX="14.0" layoutY="289.0" text="&quot;Stars change, and so can we.&quot;" textFill="WHITE" />
+      <ImageView fx:id="signimage" fitHeight="76.0" fitWidth="87.0" layoutX="30.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
+   </children>
+</AnchorPane>

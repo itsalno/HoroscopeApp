@@ -1,44 +1,44 @@
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Scanner;
 
 public class APIConnector {
 
     private final String urlString;
+    private final String apiKey;
 
-    public APIConnector(String urlString) {
+    public APIConnector(String urlString, String apiKey) {
         this.urlString = urlString;
+        this.apiKey = apiKey;
     }
 
     public JSONArray getHoroscope(String sign) {
         try {
             URL url = new URL(urlString + "?sign=" + sign);
-
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
-            conn.connect();
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("x-api-key", apiKey);
 
-            // Check if connection is made
             int responseCode = conn.getResponseCode();
 
-            if (responseCode != 200) {
-                throw new RuntimeException("HttpResponseCode: " + responseCode);
-            } else {
-                StringBuilder informationString = new StringBuilder();
-                Scanner scanner = new Scanner(url.openStream());
-
-                while (scanner.hasNext()) {
-                    informationString.append(scanner.nextLine());
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                StringBuilder response = new StringBuilder();
+                String line;
+                while ((line = in.readLine()) != null) {
+                    response.append(line);
                 }
-                scanner.close();
+                in.close();
 
-                JSONParser parse = new JSONParser();
-                return (JSONArray) parse.parse(informationString.toString());
+                JSONParser parser = new JSONParser();
+                return (JSONArray) parser.parse(response.toString());
+            } else {
+                System.out.println("GET request failed with response code: " + responseCode);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -53,7 +53,7 @@ public class APIConnector {
         String sign = "aries"; // Example sign, you can change it to any other sign
 
         // Initialize APIConnector
-        APIConnector connector = new APIConnector(apiUrl);
+        APIConnector connector = new APIConnector(apiUrl, apiKey);
         // Setting Authorization header
         // You might need to adjust this depending on how the API requires the key to be passed
         // Here I'm assuming it's a query parameter
