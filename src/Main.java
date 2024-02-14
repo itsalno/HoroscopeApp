@@ -11,13 +11,16 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("StartScreen.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("StartScreen.fxml"));
         Parent root = loader.load();
+
+        SSController ssController = new SSController();
+        MainController mainController = new MainController(ssController);
+
+        ssController.setPrimaryStage(primaryStage);
+
+        primaryStage.setTitle("HoroscopeNOW");
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
-
-        SSController controller = loader.getController();
-        controller.setPrimaryStage(primaryStage);
     }
 }
