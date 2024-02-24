@@ -8,7 +8,7 @@
 <?import javafx.scene.text.Font?>
 
 
-<AnchorPane prefHeight="256.0" prefWidth="371.0" styleClass="anchorpane" stylesheets="@Style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="SSController">
+<AnchorPane prefHeight="256.0" prefWidth="371.0" styleClass="anchorpane" stylesheets="@Style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.SSController">
    <children>
       <Label layoutX="46.0" layoutY="25.0" text="Find horoscope for today" textFill="WHITE">
          <font>

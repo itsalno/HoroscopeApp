@@ -1,19 +1,17 @@
+package GUI;
 
-        import javafx.event.ActionEvent;
+import javafx.event.ActionEvent;
         import javafx.fxml.FXML;
         import javafx.fxml.FXMLLoader;
         import javafx.fxml.Initializable;
-        import javafx.scene.Parent;
+import javafx.scene.Node;
+import javafx.scene.Parent;
         import javafx.scene.Scene;
         import javafx.scene.control.ChoiceBox;
         import javafx.scene.control.TextField;
-        import javafx.scene.text.Text;
         import javafx.stage.Stage;
-        import org.json.simple.JSONArray;
-        import org.json.simple.JSONObject;
 
         import java.io.IOException;
-        import java.net.MalformedURLException;
         import java.net.URL;
         import java.time.Month;
         import java.util.ResourceBundle;
@@ -24,13 +22,8 @@
                 private TextField dayfield;
                 @FXML
                 private ChoiceBox<String> monthbox;
-                private Stage primaryStage;
-                private MainController mainController;
                 private String[] monthlist={"January","February","March","April","May","June","July","August","September","October","November","December"};
 
-                public void setMainController(MainController mainController) {
-                        this.mainController = mainController;
-                }
                 @Override
                 public void initialize(URL location, ResourceBundle resources) {
                         monthbox.getItems().addAll(monthlist); 
@@ -40,24 +33,28 @@
 
                 public void find(ActionEvent actionEvent) throws IOException {
                         String sign = getSign();
-                        mainController.changeImage(sign);
+                        if (sign != null) {
+                                FXMLLoader loader = new FXMLLoader(getClass().getResource("MainScreen.fxml"));
+                                Parent root = loader.load();
 
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("MainScreen.fxml"));
-                        Parent root = loader.load();
-                        primaryStage.setScene(new Scene(root));
-                        primaryStage.show();
+                                MainController mainController = loader.getController();
+                                mainController.changeImage(sign);
+
+                                Stage stage = (Stage)((Node) actionEvent.getSource()).getScene().getWindow();
+                                stage.close();
+
+                                Stage primaryStage = new Stage();
+                                primaryStage.setScene(new Scene(root));
+                                primaryStage.show();
+                        }
                 }
 
-                public void setPrimaryStage(Stage primaryStage) {
-                        this.primaryStage=primaryStage;
-                }
 
                 public String getSign(){
                         String selectedMonth = monthbox.getValue();
                         int day = Integer.parseInt(dayfield.getText());
 
                         String sign = determineSign(selectedMonth, day);
-                        System.out.println("Your zodiac sign is: " + sign);
                     return sign;
                 }
                 public String determineSign(String month, int day) {
