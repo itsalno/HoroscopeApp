@@ -10,10 +10,18 @@ import javafx.scene.Parent;
         import javafx.scene.control.ChoiceBox;
         import javafx.scene.control.TextField;
         import javafx.stage.Stage;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
-        import java.io.IOException;
-        import java.net.URL;
-        import java.time.Month;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Month;
         import java.util.ResourceBundle;
 
         public class SSController implements Initializable {
@@ -31,7 +39,7 @@ import javafx.scene.Parent;
 
 
 
-                public void find(ActionEvent actionEvent) throws IOException {
+                public void find(ActionEvent actionEvent) throws IOException, ParseException, InterruptedException {
                         String sign = getSign();
                         if (sign != null) {
                                 FXMLLoader loader = new FXMLLoader(getClass().getResource("MainScreen.fxml"));
@@ -39,6 +47,7 @@ import javafx.scene.Parent;
 
                                 MainController mainController = loader.getController();
                                 mainController.changeImage(sign);
+                                mainController.fetchHoroscopeTday(sign);
 
                                 Stage stage = (Stage)((Node) actionEvent.getSource()).getScene().getWindow();
                                 stage.close();
@@ -88,6 +97,8 @@ import javafx.scene.Parent;
                                 return "Invalid date";
                         }
                 }
+
+
         }
 
 
