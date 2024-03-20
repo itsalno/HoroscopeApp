@@ -1,72 +1,40 @@
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
 public class APIConnector {
-
-    private final String urlString;
-    private final String apiKey;
-
-    public APIConnector(String urlString, String apiKey) {
-        this.urlString = urlString;
-        this.apiKey = apiKey;
-    }
-
-    public JSONArray getHoroscope(String sign) {
-        try {
-            URL url = new URL(urlString + "?sign=" + sign);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-            conn.setRequestProperty("Content-Type", "application/json");
-            conn.setRequestProperty("x-api-key", apiKey);
-
-            int responseCode = conn.getResponseCode();
-
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                StringBuilder response = new StringBuilder();
-                String line;
-                while ((line = in.readLine()) != null) {
-                    response.append(line);
-                }
-                in.close();
-
-                JSONParser parser = new JSONParser();
-                return (JSONArray) parser.parse(response.toString());
-            } else {
-                System.out.println("GET request failed with response code: " + responseCode);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     public static void main(String[] args) {
-        // Test the APIConnector
-        String apiUrl = "https://json.astrologyapi.com/v1/sun_sign_prediction/daily/";
-        String apiKey = "5yKQa7MfeDaFCJrvZkUxk6pMJ76fkgQlaZOVUFA2";
-        String sign = "aries"; // Example sign, you can change it to any other sign
+        try {
+            // Create the HTTP request
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("https://daily-horoscope-api.p.rapidapi.com/api/Daily-Horoscope-English/?zodiacSign=aries&timePeriod=today"))
+                    .header("X-RapidAPI-Key", "9a528b61e6msh155a87388e06107p15f366jsnc09e9fdbaf5f")
+                    .header("X-RapidAPI-Host", "daily-horoscope-api.p.rapidapi.com")
+                    .method("GET", HttpRequest.BodyPublishers.noBody())
+                    .build();
 
-        // Initialize APIConnector
-        APIConnector connector = new APIConnector(apiUrl, apiKey);
-        // Setting Authorization header
-        // You might need to adjust this depending on how the API requires the key to be passed
-        // Here I'm assuming it's a query parameter
-        // You may need to change this based on the actual API requirements
-        // String fullUrl = apiUrl + "?sign=" + sign + "&apikey=" + apiKey;
+            // Send the HTTP request and get the response
+            HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
 
-        JSONArray horoscopeData = connector.getHoroscope(sign);
+            // Check if the response is successful
+            if (response.statusCode() == 200) {
+                // Parse the JSON response using JSON Simple
+                JSONParser parser = new JSONParser();
+                JSONArray horoscopeData = (JSONArray) parser.parse(response.body());
 
-        if (horoscopeData != null) {
-            System.out.println("Horoscope for " + sign + ":");
-            System.out.println(horoscopeData.toJSONString());
-        } else {
-            System.out.println("Failed to fetch horoscope for " + sign);
+                // Output the parsed JSON data
+                System.out.println("Horoscope data:");
+                System.out.println(horoscopeData.toJSONString());
+            } else {
+                System.out.println("Request failed with response code: " + response.statusCode());
+            }
+        } catch (IOException | InterruptedException | org.json.simple.parser.ParseException e) {
+            e.printStackTrace();
         }
     }
 }
